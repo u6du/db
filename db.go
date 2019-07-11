@@ -25,7 +25,7 @@ func (d db) Conn() *sql.DB {
 	return db
 }
 
-func (d db) WithConn(f func(conn *sql.DB)) {
+func (d db) With(f func(conn *sql.DB)) {
 	conn := d.Conn()
 	defer ex.Close(conn)
 	f(conn)
