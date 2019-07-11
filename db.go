@@ -23,9 +23,15 @@ func (d db) Conn() *sql.DB {
 	return db
 }
 
+func (d db) WithConn(f func(*sql.DB)) {
+	conn := d.Conn()
+	defer ex.Warn(conn.Close())
+	f(conn)
+}
+
 func (d db) Exec(query string, args ...interface{}) sql.Result {
 	c := d.Conn()
-	defer c.Close()
+	defer ex.Warn(c.Close())
 	r, err := c.Exec(query, args...)
 	ex.Warn(err)
 	return r
@@ -33,7 +39,7 @@ func (d db) Exec(query string, args ...interface{}) sql.Result {
 
 func (d db) Query(query string, args ...interface{}) *sql.Rows {
 	c := d.Conn()
-	defer c.Close()
+	defer ex.Warn(c.Close())
 	r, err := c.Query(query, args...)
 	ex.Warn(err)
 	return r
