@@ -1,6 +1,7 @@
 package db
 
 import (
+	"database/sql"
 	"os"
 	"testing"
 
@@ -24,19 +25,23 @@ CREATE INDEX "dot.delay" ON "dot" ("delay" ASC);`,
 		"dns.rubyfish.cn",
 		"dot-jp.blahdns.com",
 	)
+	db.WithConn(func(c *sql.DB) {
 
-	li := Query("select id,host from dot")
-
-	var id uint64
-	var host string
-	count := 0
-	for li.Next() {
-		ex.Warn(li.Scan(&id, &host))
-		//t.Log(id, host)
-		count++
-	}
-	if 0 == count {
-		t.Error("row count = 0")
-	}
-	ex.Warn(os.Remove(config.Path(name + ".sqlite3")))
+		li, err := c.Query("select id,host from dot")
+		if err != nil {
+			t.Error(err)
+		}
+		var id uint64
+		var host string
+		count := 0
+		for li.Next() {
+			ex.Warn(li.Scan(&id, &host))
+			//t.Log(id, host)
+			count++
+		}
+		if 0 == count {
+			t.Error("row count = 0")
+		}
+	})
+	ex.Warn(os.Remove(config.File.Path(name + ".sqlite3")))
 }
