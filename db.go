@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"reflect"
 
+	_ "github.com/mattn/go-sqlite3"
+
 	"github.com/u6du/config"
 	"github.com/u6du/ex"
 )
