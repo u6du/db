@@ -25,14 +25,14 @@ func (d db) Conn() *sql.DB {
 
 func (d db) WithConn(f func(*sql.DB)) {
 	conn := d.Conn()
-	defer ex.Warn(conn.Close())
+	defer ex.Call(conn.Close)
 	f(conn)
 }
 
 func (d db) Exec(query string, args ...interface{}) sql.Result {
-	c := d.Conn()
-	defer ex.Warn(c.Close())
-	r, err := c.Exec(query, args...)
+	conn := d.Conn()
+	defer ex.Call(conn.Close)
+	r, err := conn.Exec(query, args...)
 	ex.Warn(err)
 	return r
 }
