@@ -37,14 +37,6 @@ func (d db) Exec(query string, args ...interface{}) sql.Result {
 	return r
 }
 
-func (d db) Query(query string, args ...interface{}) *sql.Rows {
-	c := d.Conn()
-	defer ex.Warn(c.Close())
-	r, err := c.Query(query, args...)
-	ex.Warn(err)
-	return r
-}
-
 // args = insert sql , insert sql args ...
 func Db(name, create string, args ...interface{}) db {
 	d := db(name)
