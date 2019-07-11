@@ -36,7 +36,7 @@ CREATE INDEX "dot.delay" ON "dot" ("delay" ASC);`,
 		count := 0
 		for li.Next() {
 			ex.Warn(li.Scan(&id, &host))
-			//t.Log(id, host)
+			t.Log(id, host)
 			count++
 		}
 		if 0 == count {
