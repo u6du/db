@@ -1,9 +1,9 @@
 package db
 
 import (
+	"database/sql"
 	"reflect"
 
-	sql "github.com/bvinc/go-sqlite-lite"
 	"github.com/u6du/config"
 	"github.com/u6du/ex"
 )
@@ -16,7 +16,7 @@ func (d db) FileName() string {
 	return string(d) + "." + DriverName
 }
 func (d db) Conn() *sql.DB {
-	dbPath := config.Path(d.FileName())
+	dbPath := config.File.Path(d.FileName())
 
 	db, err := sql.Open(DriverName, dbPath)
 	ex.Panic(err)
@@ -42,7 +42,7 @@ func (d db) Query(query string, args ...interface{}) *sql.Rows {
 // args = insert sql , insert sql args ...
 func Db(name, create string, args ...interface{}) db {
 	d := db(name)
-	dbPath, isNew := config.PathIsNew(d.FileName())
+	dbPath, isNew := config.File.PathIsNew(d.FileName())
 
 	db, err := sql.Open(DriverName, dbPath)
 	ex.Panic(err)
